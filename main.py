@@ -1,14 +1,22 @@
 import sys
 import copy 
+import time
+
+def time_solver(solver, grid):
+    start_time = time.time()
+    solver(grid)
+    end_time = time.time()
+    return end_time - start_time
+
 
 grid = [
     [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    [4, 5, 6, 7, 8, 9, 1, 2, 3],
+    [4, 5, 6, 0, 8, 0, 1, 2, 3],
     [7, 0, 0, 1, 2, 3, 4, 5, 6],
-    [2, 3, 4, 5, 6, 7, 8, 9, 1],
+    [2, 3, 4, 0, 6, 7, 8, 9, 1],
     [5, 6, 7, 8, 9, 1, 2, 3, 4],
     [8, 9, 1, 2, 3, 4, 5, 6, 7],
-    [3, 4, 5, 6, 7, 8, 9, 1, 2],
+    [3, 4, 5, 6, 7, 8, 0, 1, 2],
     [6, 7, 8, 9, 1, 2, 3, 4, 5],
     [9, 1, 2, 3, 4, 5, 6, 7, 8]
 ]
@@ -50,7 +58,6 @@ def brute_force_sudoku_solver(grid, row=0, col=0):
         for num in range(1, 10):
             newgrid = copy.deepcopy(grid)
             newgrid[row][col] = num
-
             print("\nIteration:")
             print_sudoku_grid(newgrid)
             
@@ -126,6 +133,7 @@ def find_empty(grid):
     return empty_cells
 
 
+
 def main():
     if len(sys.argv) != 2:
         print("Usage: python sudoku_solver.py [backtrack|bruteforce]")
@@ -134,8 +142,10 @@ def main():
     choice = sys.argv[1]
 
     if choice == "backtrack":
-        backtrack_sudoku_solver(grid)
+        backtrack_time = time_solver(backtrack_sudoku_solver, grid)
+        print(f"Backtrack Solver Time: {backtrack_time} seconds")
     elif choice == "bruteforce":
+        bruteforce_time = time_solver(brute_force_sudoku_solver, grid)
         print("Using Brute Force Solver")
         print("Initial Sudoku Grid:")
         print_sudoku_grid(grid)
@@ -144,8 +154,9 @@ def main():
             print_sudoku_grid(grid)
         else:
             print("\nNo solution found")
+        print(f"Brute-Force Solver Time: {bruteforce_time} seconds")
     else:
-        print("Invalid choice. Use 'backtrack' or 'bruteforce'.")
+        print("Invalid choice. Use 'backtrack' or 'bruteforce.")
 
 if __name__ == "__main__":
     main()
